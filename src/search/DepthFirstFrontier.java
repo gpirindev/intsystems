@@ -2,10 +2,12 @@ package search;
 
 import java.util.*;
 public class DepthFirstFrontier implements Frontier {
-  Stack<Node> stack = new Stack<Node>();
+  private Stack<Node> stack = new Stack<Node>();
+  private int maxNumberOfNodes = 0;
   
   public void add(Node node) {
     stack.push(node);
+    if(stack.size() > maxNumberOfNodes) maxNumberOfNodes = stack.size();
   }
   
   public void clear() {
@@ -17,9 +19,13 @@ public class DepthFirstFrontier implements Frontier {
   }
   
   public Node remove() {
-    if(isEmpty()) {
+    if(!isEmpty()) {
       return stack.pop();
     }
     else throw new java.lang.Error("The frontier is empty");
+  }
+  
+  public int maxNumberOfNodes() {
+    return maxNumberOfNodes;
   }
 }

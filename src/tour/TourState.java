@@ -1,11 +1,9 @@
 package tour;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import npuzzle.Tiles;
 import search.Action;
 import search.State;
 
@@ -40,7 +38,7 @@ public class TourState implements State {
 	}
 	public int hashCode() {
 	  int hash = 17;
-	  hash = 31*hash + currentCity.hashCode();
+	  hash = 31*hash + currentCity.name.hashCode();
 	  return 31*hash + visitedCities.hashCode();
 	}
 }

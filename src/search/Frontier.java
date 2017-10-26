@@ -5,4 +5,5 @@ public interface Frontier {
   void clear();
   boolean isEmpty();
   Node remove();
+  int maxNumberOfNodes();
 }

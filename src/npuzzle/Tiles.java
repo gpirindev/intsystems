@@ -74,11 +74,11 @@ public class Tiles implements State {
 	@Override
 	public boolean equals(Object that) {
 	  if (that instanceof Tiles) {
-	    return (this.width == ((Tiles)that).width && Arrays.equals(this.tiles, ((Tiles)that).tiles));
+	    return Arrays.equals(this.tiles, ((Tiles)that).tiles);
 	  }
 	  else return false;
 	}
 	public int hashCode() {
-	  return tiles.hashCode();
+	  return Arrays.hashCode(tiles);
 	}
 }

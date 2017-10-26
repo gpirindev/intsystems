@@ -1,12 +1,18 @@
 package npuzzle;
 
-import search.BreadthFirstTreeSearch;
+import search.BreadthFirstFrontier;
+//import search.BreadthFirstTreeSearch;
+import search.DepthFirstFrontier;
 import search.GoalTest;
+import search.GraphSearch;
 import search.Node;
+import search.Printing;
+import search.Search;
+import search.TreeSearch;
 
 public class BFTS_Demo {
 	public static void main(String[] args) {
-		System.out.println("This is a demonstration of breadth-first tree search on 8-puzzle");
+		System.out.println("This is a demonstration of search on 8-puzzle");
 		System.out.println();
 		
 		Tiles initialConfiguration = new Tiles(new int[][] {
@@ -14,9 +20,31 @@ public class BFTS_Demo {
 			{ 8, 1, 3 },
 			{ 5, 0, 6 }
 		});
-		
+		Node root = new Node(null, null, initialConfiguration);
 		GoalTest goalTest = new TilesGoalTest();
-		Node solution = BreadthFirstTreeSearch.findSolution(initialConfiguration, goalTest);
-		new NPuzzlePrinting().printSolution(solution);
+		Printing printing = new NPuzzlePrinting();
+		Search BFTS = new TreeSearch(new BreadthFirstFrontier());
+    Search BFGS = new GraphSearch(new BreadthFirstFrontier());
+    Search DFTS = new TreeSearch(new DepthFirstFrontier());
+    Search DFGS = new GraphSearch(new DepthFirstFrontier());
+		Node solution = BFTS.findSolution(root, goalTest);
+		printing.printSolution(solution);
+		System.out.println("The maximum number of nodes stored in BFTS is " + BFTS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in BFTS is " + BFTS.nodesGenerated());
+    System.out.println("");
+    solution = BFGS.findSolution(root, goalTest);
+    printing.printSolution(solution);
+    System.out.println("The maximum number of nodes stored in BFGS is " + BFGS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in BFGS is " + BFGS.nodesGenerated());
+    System.out.println("");
+    /*solution = DFGS.findSolution(root, goalTest);
+    printing.printSolution(solution);
+    System.out.println("The maximum number of nodes stored in DFGS is " + DFGS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in DFGS is " + DFGS.nodesGenerated());
+    System.out.println("");*/
+    /*solution = DFTS.findSolution(root, goalTest);
+    printing.printSolution(solution);
+    System.out.println("The maximum number of nodes stored in DFTS is " + DFTS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in DFTS is " + DFTS.nodesGenerated());*/
 	}
 }
