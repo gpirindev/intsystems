@@ -9,4 +9,26 @@ The total number of nodes generated in BFGS is 4359
 The maximum number of nodes stored in DFGS is 14480
 The total number of nodes generated in DFGS is 34266
 
-DFTS runs until an OutOfMemory error appears. This we deduce that DFS using Tree Search entered a loop and will never find the solution.
+DFTS runs until an OutOfMemory error appears. Thus we deduce that DFS using Tree Search entered a loop and will never find the solution.
+
+The maximum number of nodes stored in IDTS is 28
+The total number of nodes generated in IDTS is 621664
+
+
+This is a demonstration of breadth-first tree search on Romania tour
+
+The maximum number of nodes stored in BFTS is 44217
+The total number of nodes generated in BFTS is 75973
+
+The maximum number of nodes stored in BFGS is 186
+The total number of nodes generated in BFGS is 947
+
+The maximum number of nodes stored in IDTS is 29
+The total number of nodes generated in IDTS is 11996
+
+The maximum number of nodes stored in DFGS is 19
+The total number of nodes generated in DFGS is 62
+
+DFGS doesn't yield an optimal solution
+
+DFTS doesn't terminate
