@@ -1,0 +1,9 @@
+Results for the npuzzle:
+
+The maximum number of nodes stored in ASTS is 613
+The total number of nodes generated in ASTS is 964
+
+The maximum number of nodes stored in ASGS is 91
+The total number of nodes generated in ASGS is 224
+
+Both search yield the optimal solution since the heuristic is consistent (thus admissible)

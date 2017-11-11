@@ -6,6 +6,6 @@ public class AStarFunction implements NodeFunction{
         this.heuristicFunction = heuristicFunction;
     }
     public int evaluate(Node node) {
-        return node.pathCost = heuristicFunction.evaluate(node);
+        return node.pathCost + heuristicFunction.evaluate(node);
     }
 }

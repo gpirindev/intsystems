@@ -8,12 +8,12 @@ public class Node {
 	public int value;
 	public int pathCost;
 	
-	public Node(Node parent, Action action, State state, int depth) {
+	/*public Node(Node parent, Action action, State state, int depth) {
 		this.parent = parent;
 		this.action = action;
 		this.state = state;
 		this.depth = depth;
-	}
+	}*/
 	public Node(Node parent, Action action, State state) {
     this.parent = parent;
     this.action = action;
