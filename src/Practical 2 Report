@@ -7,3 +7,17 @@ The maximum number of nodes stored in ASGS is 91
 The total number of nodes generated in ASGS is 224
 
 Both search yield the optimal solution since the heuristic is consistent (thus admissible)
+
+Results on small Romania map:
+
+The maximum number of nodes stored in ASTS is 291
+The total number of nodes generated in ASTS is 453
+
+The maximum number of nodes stored in ASGS is 97
+The total number of nodes generated in ASGS is 197
+
+Results on large Romania map:
+
+
+The maximum number of nodes stored in ASGS is 7419
+The total number of nodes generated in ASGS is 24061
