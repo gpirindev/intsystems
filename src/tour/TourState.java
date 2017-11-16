@@ -38,7 +38,7 @@ public class TourState implements State {
 	}
 	public int hashCode() {
 	  int hash = 17;
-	  hash = 31*hash + currentCity.name.hashCode();
+	  hash = 31*hash + currentCity.getName().hashCode();
 	  return 31*hash + visitedCities.hashCode();
 	}
 }

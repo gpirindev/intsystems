@@ -24,9 +24,9 @@ public class FurthestCityHeuristicFunction implements NodeFunction {
     City furthest = currentCity;
     int shortestDist = 0;
     for (City city: allCities) {
-      if(currentCity.getShortestDistanceTo(city) > shortestDist) {
+      if(currentCity.getShortestDistanceTo(city) + furthest.getShortestDistanceTo(goalCity) > shortestDist) {
         furthest = city;
-        shortestDist = currentCity.getShortestDistanceTo(city);
+        shortestDist = currentCity.getShortestDistanceTo(city) + furthest.getShortestDistanceTo(goalCity);
       }
     }
     return furthest;

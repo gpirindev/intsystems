@@ -1,0 +1,10 @@
+My strategy would be to use tree search combined with depth first search with max depth 20.
+We need tree search as we might revisit squares in the grid. In additions, we will need to keep track of the size of the explored set
+as it will give the total number of explored squares.
+
+State - current sq, set of visited sq
+Action - up, down, left, right with cost 1
+Printing - sth
+GoalTest - missing for now
+Instead, while searching when a node with pathcost 20 is found check if it has more neighbours on the path; keep it!
+repeat until the frontier is empty; add new node to the frontier iff their pathcost is < 20

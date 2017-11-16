@@ -18,6 +18,224 @@ The total number of nodes generated in ASGS is 197
 
 Results on large Romania map:
 
+AStar Tree search doesn't terminate as the number of nodes generated before finding a solution is too large.
+Nevertheless, it is guaranteed to find an optimal solution after a finite amount of time. 
 
 The maximum number of nodes stored in ASGS is 7419
 The total number of nodes generated in ASGS is 24061
+
+package search;
+
+public class Node {
+	public final Node parent;
+	public final Action action;
+	public final State state;
+	public int depth;
+	public int value;
+	public int pathCost;
+	
+	public Node(Node parent, Action action, State state, int depth) {
+		this.parent = parent;
+		this.action = action;
+		this.state = state;
+		this.depth = depth;
+	}
+	public Node(Node parent, Action action, State state) {
+    this.parent = parent;
+    this.action = action;
+    this.state = state;
+    if (parent == null) this.pathCost = 0;
+    else {
+      this.pathCost = parent.pathCost + action.cost();
+    }
+    }
+}
+
+package search;
+
+public interface Action {
+    int cost();
+}
+
+package search;
+
+public class AStarFunction implements NodeFunction{
+    private NodeFunction heuristicFunction;
+    public AStarFunction(NodeFunction heuristicFunction){
+        this.heuristicFunction = heuristicFunction;
+    }
+    public int evaluate(Node node) {
+        return node.pathCost + heuristicFunction.evaluate(node);
+    }
+}
+
+package search;
+
+public interface NodeFunction {
+    int evaluate(Node node);
+}
+
+package search;
+
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+public class BestFirstFrontier implements Frontier{
+    private Queue<Node> queue = new PriorityQueue<>((Node n1, Node n2) -> (n1.value - n2.value));
+    private int maxNumberOfNodes = 0;
+    private NodeFunction evaluator;
+    public BestFirstFrontier(NodeFunction evaluator) {
+        this.evaluator = evaluator;
+    }
+
+    public void add(Node node) {
+        node.value = evaluator.evaluate(node);
+        queue.add(node);
+        if(queue.size() > maxNumberOfNodes) maxNumberOfNodes = queue.size();
+    }
+
+    public void clear() {
+        queue.clear();
+    }
+
+    public boolean isEmpty() {
+        return queue.isEmpty();
+    }
+
+    public Node remove() {
+        if(!isEmpty()) {
+            return queue.remove();
+        }
+        else throw new java.lang.Error("The frontier is empty");
+    }
+
+    public int maxNumberOfNodes() {
+        return maxNumberOfNodes;
+    }
+}
+
+package npuzzle;
+
+import search.Node;
+import search.NodeFunction;
+
+public class MisplacedTilesHeuristicFunction implements NodeFunction {
+    public int evaluate(Node node) {
+        int[] tiles = ((Tiles)node.state).tiles;
+        int width = ((Tiles)node.state).width;
+        int diff = 0;
+        for (int row = 0; row < width; row++)
+            for (int column = 0; column < width; column++) {
+                if ( tiles[row*width + column] != row*width + column + 1) diff++;
+            }
+        return diff;
+    }
+}
+
+
+package tour;
+
+import search.NodeFunction;
+import java.util.Set;
+import search.Node;
+
+public class FurthestCityHeuristicFunction implements NodeFunction {
+  private Cities cities;
+  private City goalCity;
+  public FurthestCityHeuristicFunction(Cities cities, City goalCity) {
+    this.cities = cities;
+    this.goalCity = goalCity;
+  }
+  public int evaluate(Node node) {
+    TourState state = (TourState)node.state;
+    City furthest = findFurthestCity(state.currentCity, state.visitedCities);
+    return state.currentCity.getShortestDistanceTo(furthest) + furthest.getShortestDistanceTo(goalCity);
+  }
+  private City findFurthestCity(City currentCity, Set<City> visitedCities) {
+    Set<City> allCities = cities.getAllCities();
+    for (City city: visitedCities) {
+      allCities.remove(city);
+    }
+    City furthest = currentCity;
+    int shortestDist = 0;
+    for (City city: allCities) {
+      if(currentCity.getShortestDistanceTo(city) + furthest.getShortestDistanceTo(goalCity) > shortestDist) {
+        furthest = city;
+        shortestDist = currentCity.getShortestDistanceTo(city) + furthest.getShortestDistanceTo(goalCity);
+      }
+    }
+    return furthest;
+  }
+}
+
+package tour;
+
+import search.AStarFunction;
+import search.BestFirstFrontier;
+import search.GoalTest;
+import search.GraphSearch;
+import search.Node;
+import search.Printing;
+import search.Search;
+import search.TreeSearch;
+
+public class BFTS_Demo {
+	public static void main(String[] args) {
+		System.out.println("This is a demonstration of search on Romania tour");
+		System.out.println();
+		
+		Cities romania = SetUpRomania.getRomaniaMap();
+		City startCity = romania.getState("Bucharest");
+		
+		GoalTest goalTest = new TourGoalTest(romania.getAllCities(), startCity);
+		
+		Node root = new Node(null, null, new TourState(startCity));
+    Printing printing = new TourPrinting();
+    Search ASGS = new GraphSearch(new BestFirstFrontier(new AStarFunction(new FurthestCityHeuristicFunction(romania, startCity))));
+    Search ASTS = new TreeSearch(new BestFirstFrontier(new AStarFunction(new FurthestCityHeuristicFunction(romania, startCity))));
+    Node solution = ASGS.findSolution(root, goalTest);
+    printing.printSolution(solution);
+    System.out.println("The maximum number of nodes stored in ASGS is " + ASGS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in ASGS is " + ASGS.nodesGenerated());
+    System.out.println("");
+    solution = ASTS.findSolution(root, goalTest);
+    printing.printSolution(solution);
+    System.out.println("The maximum number of nodes stored in ASTS is " + ASTS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in ASTS is " + ASTS.nodesGenerated());
+    System.out.println("");
+    
+	}
+}
+
+package npuzzle;
+
+import search.*;
+
+public class BFTS_Demo {
+	public static void main(String[] args) {
+		System.out.println("This is a demonstration of search on 8-puzzle");
+		System.out.println();
+		
+		Tiles initialConfiguration = new Tiles(new int[][] {
+			{ 7, 4, 2 },
+			{ 8, 1, 3 },
+			{ 5, 0, 6 }
+		});
+		Node root = new Node(null, null, initialConfiguration);
+		GoalTest goalTest = new TilesGoalTest();
+		Printing printing = new NPuzzlePrinting();
+		Search ASTS = new TreeSearch(new BestFirstFrontier(new AStarFunction(new MisplacedTilesHeuristicFunction())));
+    Search ASGS = new GraphSearch(new BestFirstFrontier(new AStarFunction(new MisplacedTilesHeuristicFunction())));
+    Node solution = ASTS.findSolution(root, goalTest);
+    printing.printSolution(solution);
+    System.out.println("The maximum number of nodes stored in ASTS is " + ASTS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in ASTS is " + ASTS.nodesGenerated());
+    System.out.println("");
+    solution = ASGS.findSolution(root, goalTest);
+    printing.printSolution(solution);
+    System.out.println("The maximum number of nodes stored in ASGS is " + ASGS.maxNumberOfNodes());
+    System.out.println("The total number of nodes generated in ASGS is " + ASGS.nodesGenerated());
+    System.out.println("");
+	}
+}
+
